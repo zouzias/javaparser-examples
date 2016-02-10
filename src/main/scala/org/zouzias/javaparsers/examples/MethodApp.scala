@@ -35,9 +35,17 @@ object MethodApp {
       val in = new FileInputStream(javaFile)
       val cu = getCompilationUnit(in)
 
-      cu.foreach(printMethods(_))
+      cu.foreach { c =>
+        val classes = c.getTypes.asScala.toArray
+
+        for (clazz <- classes) {
+          println(Clazz(clazz))
+        }
+      }
     }
   }
+  // scalastyle:on println
+
 
   private def getCompilationUnit(in: FileInputStream): Option[CompilationUnit] = {
     try {
@@ -49,20 +57,5 @@ object MethodApp {
       in.close
     }
   }
-
-
-  def printMethods(cu: CompilationUnit): Unit = {
-    val classes = cu.getTypes.asScala.toArray
-
-    val clazzes = new ArrayBuffer[Clazz]()
-
-    for (clazz <- classes) {
-      clazzes.append(Clazz(clazz))
-    }
-
-    clazzes.foreach(println(_))
-  }
-
-  // scalastyle:on println
 }
 
